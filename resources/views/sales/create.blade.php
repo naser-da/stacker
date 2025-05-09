@@ -1,78 +1,105 @@
 <x-app-layout>
     <x-slot name="header">
         <div class="flex justify-between items-center">
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            <h2 class="font-semibold text-xl text-gray-800 dark:text-[#e8eaed] leading-tight">
                 {{ __('Create Sale') }}
             </h2>
-            <a href="{{ route('sales.index') }}" class="inline-flex items-center px-4 py-2 bg-gray-300 border border-transparent rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest hover:bg-gray-400">
-                {{ __('Back to Sales') }}
+            <a href="{{ route('sales.index') }}" class="inline-flex items-center px-4 py-2 bg-[#1a73e8] border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-[#1557b0] dark:bg-[#8ab4f8] dark:hover:bg-[#aecbfa] dark:text-[#202124]">
+                Back to Sales
             </a>
         </div>
     </x-slot>
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
+            <div class="card">
+                <div class="p-6">
                     @if(session('error'))
                         <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
                             <span class="block sm:inline">{{ session('error') }}</span>
                         </div>
                     @endif
 
-                    <form method="POST" action="{{ route('sales.store') }}" id="saleForm" class="space-y-8">
+                    <form method="POST" action="{{ route('sales.store') }}" class="space-y-6">
                         @csrf
 
-                        <div class="bg-gray-50 p-6 rounded-lg">
-                            <h3 class="text-lg font-medium text-gray-900 mb-4">Customer Information</h3>
-                            <div class="max-w-xl">
-                                <x-input-label for="customer_id" :value="__('Customer')" />
-                                <div class="relative">
-                                    <select id="customer_id" name="customer_id" 
-                                        class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 rounded-md shadow-sm appearance-none bg-white" 
-                                        required>
-                                        <option value="">Select a customer</option>
-                                        @foreach($customers as $customer)
-                                            <option value="{{ $customer->id }}" {{ old('customer_id') == $customer->id ? 'selected' : '' }}>
-                                                {{ $customer->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                                        <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
-                                        </svg>
-                                    </div>
-                                </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Customer Selection -->
+                            <div>
+                                <x-input-label for="customer_id" :value="__('Customer')" class="text-gray-700 dark:text-[#e8eaed]" />
+                                <select id="customer_id" name="customer_id" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-gray-700 dark:bg-[#2d2e31] dark:border-[#3c4043] dark:text-[#e8eaed]" required>
+                                    <option value="">Select a customer</option>
+                                    @foreach($customers as $customer)
+                                        <option value="{{ $customer->id }}" {{ old('customer_id') == $customer->id ? 'selected' : '' }}>
+                                            {{ $customer->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
                                 <x-input-error class="mt-2" :messages="$errors->get('customer_id')" />
                             </div>
-                        </div>
 
-                        <div class="bg-gray-50 p-6 rounded-lg">
-                            <div class="flex justify-between items-center mb-4">
-                                <h3 class="text-lg font-medium text-gray-900">Sale Items</h3>
-                                <x-primary-button type="button" onclick="addItem()" class="bg-indigo-600 hover:bg-indigo-700">
-                                    <svg class="h-4 w-4 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                                    </svg>
-                                    Add Item
-                                </x-primary-button>
-                            </div>
-                            <div id="items-container" class="space-y-4">
-                                <!-- Items will be added here dynamically -->
+                            <!-- Sale Date -->
+                            <div>
+                                <x-input-label for="sale_date" :value="__('Sale Date')" class="text-gray-700 dark:text-[#e8eaed]" />
+                                <x-text-input id="sale_date" name="sale_date" type="date" class="mt-1 block w-full text-gray-700 dark:text-[#e8eaed]" :value="old('sale_date', now()->format('Y-m-d'))" required />
+                                <x-input-error class="mt-2" :messages="$errors->get('sale_date')" />
                             </div>
                         </div>
 
-                        <div class="bg-gray-50 p-6 rounded-lg">
-                            <div class="flex justify-between items-center">
-                                <div class="text-lg font-medium text-gray-900">
-                                    Total Amount: <span id="total-amount" class="text-indigo-600">$0.00</span>
+                        <!-- Products Selection -->
+                        <div>
+                            <x-input-label :value="__('Products')" class="text-gray-700 dark:text-[#e8eaed]" />
+                            <div class="mt-2 space-y-4">
+                                <div id="products-container">
+                                    <div class="product-row grid grid-cols-12 gap-4 items-end">
+                                        <div class="col-span-5">
+                                            <select name="products[0][product_id]" class="product-select block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-gray-700 dark:bg-[#2d2e31] dark:border-[#3c4043] dark:text-[#e8eaed]" required>
+                                                <option value="">Select a product</option>
+                                                @foreach($products as $product)
+                                                    <option value="{{ $product->id }}" data-price="{{ $product->price }}" data-stock="{{ $product->stock }}">
+                                                        {{ $product->name }} (Stock: {{ $product->stock }})
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="col-span-2">
+                                            <x-input-label for="quantity" :value="__('Quantity')" class="text-gray-700 dark:text-[#e8eaed]" />
+                                            <x-text-input type="number" name="products[0][quantity]" class="quantity-input mt-1 block w-full text-gray-700 dark:text-[#e8eaed]" min="1" value="1" required />
+                                        </div>
+                                        <div class="col-span-2">
+                                            <x-input-label for="price" :value="__('Price')" class="text-gray-700 dark:text-[#e8eaed]" />
+                                            <x-text-input type="number" name="products[0][price]" class="price-input mt-1 block w-full text-gray-700 dark:text-[#e8eaed]" step="0.01" required />
+                                        </div>
+                                        <div class="col-span-2">
+                                            <x-input-label for="subtotal" :value="__('Subtotal')" class="text-gray-700 dark:text-[#e8eaed]" />
+                                            <x-text-input type="number" class="subtotal-input mt-1 block w-full text-gray-700 dark:text-[#e8eaed]" readonly />
+                                        </div>
+                                        <div class="col-span-1">
+                                            <button type="button" class="remove-product text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="flex items-center gap-4">
-                                    <a href="{{ route('sales.index') }}" class="text-gray-600 hover:text-gray-900">Cancel</a>
-                                    <x-primary-button>{{ __('Create Sale') }}</x-primary-button>
-                                </div>
+
+                                <button type="button" id="add-product" class="inline-flex items-center px-4 py-2 bg-[#1a73e8] border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-[#1557b0] dark:bg-[#8ab4f8] dark:hover:bg-[#aecbfa] dark:text-[#202124]">
+                                    Add Product
+                                </button>
                             </div>
+                        </div>
+
+                        <!-- Totals -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <x-input-label for="total_amount" :value="__('Total Amount')" class="text-gray-700 dark:text-[#e8eaed]" />
+                                <x-text-input id="total_amount" name="total_amount" type="number" class="mt-1 block w-full text-gray-700 dark:text-[#e8eaed]" step="0.01" readonly />
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-4">
+                            <x-primary-button>{{ __('Create Sale') }}</x-primary-button>
                         </div>
                     </form>
                 </div>
@@ -80,102 +107,96 @@
         </div>
     </div>
 
+    @push('scripts')
     <script>
-        let itemCount = 0;
-
-        function addItem() {
-            const container = document.getElementById('items-container');
-            const itemDiv = document.createElement('div');
-            itemDiv.className = 'bg-white p-4 rounded-lg border border-gray-200 shadow-sm';
-            itemDiv.innerHTML = `
-                <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
-                    <div class="md:col-span-5">
-                        <x-input-label for="product_id_${itemCount}" :value="__('Product')" />
-                        <div class="relative">
-                            <select id="product_id_${itemCount}" name="items[${itemCount}][product_id]" 
-                                class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 rounded-md shadow-sm appearance-none bg-white" 
-                                required onchange="updateSubtotal(${itemCount})">
-                                <option value="">Select a product</option>
-                                @foreach($products as $product)
-                                    <option value="{{ $product->id }}" data-price="{{ $product->price }}">
-                                        {{ $product->name }} - ${{ number_format($product->price, 2) }}
-                                    </option>
-                                @endforeach
-                            </select>
-                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                                <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
-                                </svg>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="md:col-span-3">
-                        <x-input-label for="quantity_${itemCount}" :value="__('Quantity')" />
-                        <x-text-input id="quantity_${itemCount}" 
-                            name="items[${itemCount}][quantity]" 
-                            type="number" 
-                            min="1" 
-                            value="1" 
-                            class="mt-1 block w-full" 
-                            required 
-                            onchange="updateSubtotal(${itemCount})" />
-                    </div>
-                    <div class="md:col-span-3">
-                        <x-input-label for="subtotal_${itemCount}" :value="__('Subtotal')" />
-                        <x-text-input id="subtotal_${itemCount}" 
-                            type="text" 
-                            class="mt-1 block w-full bg-gray-50" 
-                            readonly />
-                    </div>
-                    <div class="md:col-span-1 flex items-end">
-                        <button type="button" 
-                            class="text-red-600 hover:text-red-900 p-2 rounded-full hover:bg-red-50" 
-                            onclick="removeItem(this)">
-                            <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-            `;
-            container.appendChild(itemDiv);
-            itemCount++;
-        }
-
-        function removeItem(button) {
-            button.closest('div.bg-white').remove();
-            updateTotalAmount();
-        }
-
-        function updateSubtotal(index) {
-            const productSelect = document.getElementById(`product_id_${index}`);
-            const quantityInput = document.getElementById(`quantity_${index}`);
-            const subtotalInput = document.getElementById(`subtotal_${index}`);
-            
-            const selectedOption = productSelect.options[productSelect.selectedIndex];
-            const price = selectedOption.dataset.price || 0;
-            const quantity = quantityInput.value || 0;
-            
-            const subtotal = price * quantity;
-            subtotalInput.value = `$${subtotal.toFixed(2)}`;
-            updateTotalAmount();
-        }
-
-        function updateTotalAmount() {
-            const subtotalInputs = document.querySelectorAll('[id^="subtotal_"]');
-            let total = 0;
-            
-            subtotalInputs.forEach(input => {
-                const value = parseFloat(input.value.replace('$', '')) || 0;
-                total += value;
-            });
-            
-            document.getElementById('total-amount').textContent = `$${total.toFixed(2)}`;
-        }
-
-        // Add first item on page load
         document.addEventListener('DOMContentLoaded', function() {
-            addItem();
+            const productsContainer = document.getElementById('products-container');
+            const addProductButton = document.getElementById('add-product');
+            let productCount = 1;
+
+            function updateSubtotal(row) {
+                const quantity = parseFloat(row.querySelector('.quantity-input').value) || 0;
+                const price = parseFloat(row.querySelector('.price-input').value) || 0;
+                const subtotal = quantity * price;
+                row.querySelector('.subtotal-input').value = subtotal.toFixed(2);
+                updateTotal();
+            }
+
+            function updateTotal() {
+                const subtotals = Array.from(document.querySelectorAll('.subtotal-input'))
+                    .map(input => parseFloat(input.value) || 0);
+                const total = subtotals.reduce((sum, subtotal) => sum + subtotal, 0);
+                document.getElementById('total_amount').value = total.toFixed(2);
+            }
+
+            function addProductRow() {
+                const template = productsContainer.querySelector('.product-row').cloneNode(true);
+                const newIndex = productCount++;
+
+                // Update input names and IDs
+                template.querySelectorAll('[name]').forEach(input => {
+                    input.name = input.name.replace('[0]', `[${newIndex}]`);
+                    input.value = '';
+                });
+
+                // Add event listeners
+                template.querySelector('.product-select').addEventListener('change', function() {
+                    const option = this.options[this.selectedIndex];
+                    const price = option.dataset.price;
+                    const stock = option.dataset.stock;
+                    const row = this.closest('.product-row');
+                    row.querySelector('.price-input').value = price;
+                    row.querySelector('.quantity-input').max = stock;
+                    updateSubtotal(row);
+                });
+
+                template.querySelector('.quantity-input').addEventListener('input', function() {
+                    updateSubtotal(this.closest('.product-row'));
+                });
+
+                template.querySelector('.price-input').addEventListener('input', function() {
+                    updateSubtotal(this.closest('.product-row'));
+                });
+
+                template.querySelector('.remove-product').addEventListener('click', function() {
+                    if (productsContainer.querySelectorAll('.product-row').length > 1) {
+                        this.closest('.product-row').remove();
+                        updateTotal();
+                    }
+                });
+
+                productsContainer.appendChild(template);
+            }
+
+            // Add event listeners to the first row
+            const firstRow = productsContainer.querySelector('.product-row');
+            firstRow.querySelector('.product-select').addEventListener('change', function() {
+                const option = this.options[this.selectedIndex];
+                const price = option.dataset.price;
+                const stock = option.dataset.stock;
+                const row = this.closest('.product-row');
+                row.querySelector('.price-input').value = price;
+                row.querySelector('.quantity-input').max = stock;
+                updateSubtotal(row);
+            });
+
+            firstRow.querySelector('.quantity-input').addEventListener('input', function() {
+                updateSubtotal(this.closest('.product-row'));
+            });
+
+            firstRow.querySelector('.price-input').addEventListener('input', function() {
+                updateSubtotal(this.closest('.product-row'));
+            });
+
+            firstRow.querySelector('.remove-product').addEventListener('click', function() {
+                if (productsContainer.querySelectorAll('.product-row').length > 1) {
+                    this.closest('.product-row').remove();
+                    updateTotal();
+                }
+            });
+
+            addProductButton.addEventListener('click', addProductRow);
         });
     </script>
+    @endpush
 </x-app-layout> 

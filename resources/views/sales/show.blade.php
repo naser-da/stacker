@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <div class="flex justify-between items-center">
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight dark:text-[#e8eaed]">
                 {{ __('Sale Details') }}
             </h2>
             <div class="flex gap-2">
@@ -27,7 +27,7 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+            <div class="bg-white dark:bg-[#2d2e31] overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
                     @if(session('success'))
                         <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
@@ -43,60 +43,60 @@
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                         <div>
-                            <h3 class="text-lg font-medium text-gray-900 mb-4">Sale Information</h3>
+                            <h3 class="text-lg font-medium dark:text-[#e8eaed] text-gray-900 mb-4">Sale Information</h3>
                             <dl class="space-y-4">
                                 <div>
-                                    <dt class="text-sm font-medium text-gray-500">Customer</dt>
-                                    <dd class="mt-1 text-sm text-gray-900">{{ $sale->customer->name }}</dd>
+                                    <dt class="text-sm font-medium text-gray-500  dark:text-[#9aa0a6]">Customer</dt>
+                                    <dd class="mt-1 text-sm text-gray-900 dark:text-[#e8eaed]">{{ $sale->customer->name }}</dd>
                                 </div>
                                 <div>
-                                    <dt class="text-sm font-medium text-gray-500">Date</dt>
-                                    <dd class="mt-1 text-sm text-gray-900">{{ $sale->created_at->format('M d, Y H:i') }}</dd>
+                                    <dt class="text-sm font-medium text-gray-500 dark:text-[#9aa0a6]">Date</dt>
+                                    <dd class="mt-1 text-sm text-gray-900 dark:text-[#e8eaed]">{{ $sale->created_at->format('M d, Y H:i') }}</dd>
                                 </div>
                                 <div>
-                                    <dt class="text-sm font-medium text-gray-500">Total Amount</dt>
-                                    <dd class="mt-1 text-sm text-gray-900">${{ number_format($sale->total_amount, 2) }}</dd>
+                                    <dt class="text-sm font-medium text-gray-500 dark:text-[#9aa0a6]">Total Amount</dt>
+                                    <dd class="mt-1 text-sm text-gray-900 dark:text-[#e8eaed]">${{ number_format($sale->total_amount, 2) }}</dd>
                                 </div>
                             </dl>
                         </div>
                     </div>
 
                     <div class="mt-8">
-                        <h3 class="text-lg font-medium text-gray-900 mb-4">Sale Items</h3>
+                        <h3 class="text-lg font-medium dark:text-[#e8eaed] text-gray-900 mb-4">Sale Items</h3>
                         <div class="overflow-x-auto">
                             <table class="min-w-full divide-y divide-gray-200">
-                                <thead class="bg-gray-50">
+                                <thead class="bg-gray-50 dark:bg-[#2d2e31]">
                                     <tr>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product</th>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quantity</th>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Subtotal</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-[#9aa0a6] uppercase tracking-wider">Product</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-[#9aa0a6] uppercase tracking-wider">Price</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-[#9aa0a6] uppercase tracking-wider">Quantity</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-[#9aa0a6] uppercase tracking-wider">Subtotal</th>
                                     </tr>
                                 </thead>
-                                <tbody class="bg-white divide-y divide-gray-200">
+                                <tbody class="bg-white dark:bg-[#2d2e31] divide-y divide-gray-200">
                                     @foreach($sale->items as $item)
                                         <tr>
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-[#e8eaed]">
                                                 {{ $item->product->name }}
                                             </td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-[#e8eaed]">
                                                 ${{ number_format($item->price, 2) }}
                                             </td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-[#e8eaed]">
                                                 {{ $item->quantity }}
                                             </td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-[#e8eaed]">
                                                 ${{ number_format($item->subtotal, 2) }}
                                             </td>
                                         </tr>
                                     @endforeach
                                 </tbody>
-                                <tfoot class="bg-gray-50">
+                                <tfoot class="bg-gray-50 dark:bg-[#2d2e31]">
                                     <tr>
-                                        <td colspan="3" class="px-6 py-4 text-right text-sm font-medium text-gray-900">
+                                        <td colspan="3" class="px-6 py-4 text-right text-sm font-medium text-gray-900 dark:text-[#e8eaed]">
                                             Total:
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-[#e8eaed]">
                                             ${{ number_format($sale->total_amount, 2) }}
                                         </td>
                                     </tr>

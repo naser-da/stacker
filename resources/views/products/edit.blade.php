@@ -1,32 +1,32 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight dark:text-[#e8eaed]">
             {{ __('Edit Product') }}
         </h2>
     </x-slot>
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+            <div class="card">
                 <div class="p-6 text-gray-900">
                     <form method="POST" action="{{ route('products.update', $product) }}" class="space-y-6" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
 
                         <div>
-                            <x-input-label for="name" :value="__('Name')" />
-                            <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" :value="old('name', $product->name)" required autofocus />
+                            <x-input-label for="name" :value="__('Name')" class="dark:text-[#9aa0a6]"/>
+                            <x-text-input id="name" name="name" type="text" class="mt-1 block w-full dark:text-[#e8eaed] dark:bg-[#2d2e31] dark:border-[#3c4043]" :value="old('name', $product->name)" required autofocus />
                             <x-input-error class="mt-2" :messages="$errors->get('name')" />
                         </div>
 
                         <div>
-                            <x-input-label for="description" :value="__('Description')" />
-                            <x-textarea-input id="description" name="description" class="mt-1 block w-full" rows="3">{{ old('description', $product->description) }}</x-textarea-input>
+                            <x-input-label for="description" :value="__('Description')" class="dark:text-[#9aa0a6]"/>
+                            <x-textarea-input id="description" name="description" class="mt-1 block w-full dark:text-[#e8eaed] dark:bg-[#2d2e31] dark:border-[#3c4043]" rows="3">{{ old('description', $product->description) }}</x-textarea-input>
                             <x-input-error class="mt-2" :messages="$errors->get('description')" />
                         </div>
 
                         <div>
-                            <x-input-label for="image" :value="__('Product Image')" />
+                            <x-input-label for="image" :value="__('Product Image')" class="dark:text-[#9aa0a6]"/>
                             @if($product->image)
                                 <div class="mt-2 mb-4">
                                     <img src="{{ $product->image_url }}" alt="{{ $product->name }}" class="w-32 h-32 object-cover rounded-lg">
@@ -43,31 +43,31 @@
                         </div>
 
                         <div>
-                            <x-input-label for="cost" :value="__('Cost')" />
-                            <x-text-input id="cost" name="cost" type="number" step="0.01" class="mt-1 block w-full" :value="old('cost', $product->cost)" required />
+                            <x-input-label for="cost" :value="__('Cost')" class="dark:text-[#9aa0a6]"/>
+                            <x-text-input id="cost" name="cost" type="number" step="0.01" class="mt-1 block w-full dark:text-[#e8eaed] dark:bg-[#2d2e31] dark:border-[#3c4043]" :value="old('cost', $product->cost)" required />
                             <x-input-error class="mt-2" :messages="$errors->get('cost')" />
                         </div>
 
                         <div>
-                            <x-input-label for="profit" :value="__('Profit')" />
-                            <x-text-input id="profit" name="profit" type="number" step="0.01" class="mt-1 block w-full" :value="old('profit', $product->profit)" required />
+                            <x-input-label for="profit" :value="__('Profit')" class="dark:text-[#9aa0a6]"/>
+                            <x-text-input id="profit" name="profit" type="number" step="0.01" class="mt-1 block w-full dark:text-[#e8eaed] dark:bg-[#2d2e31] dark:border-[#3c4043]" :value="old('profit', $product->profit)" required />
                             <x-input-error class="mt-2" :messages="$errors->get('profit')" />
                         </div>
 
                         <div>
-                            <x-input-label for="price" :value="__('Price')" />
-                            <x-text-input id="price" name="price" type="number" step="0.01" class="mt-1 block w-full" :value="old('price', $product->price)" required />
+                            <x-input-label for="price" :value="__('Price')" class="dark:text-[#9aa0a6]"/>
+                            <x-text-input id="price" name="price" type="number" step="0.01" class="mt-1 block w-full dark:text-[#e8eaed] dark:bg-[#2d2e31] dark:border-[#3c4043]" :value="old('price', $product->price)" required />
                             <x-input-error class="mt-2" :messages="$errors->get('price')" />
                         </div>
 
                         <div>
-                            <x-input-label for="stock" :value="__('Stock')" />
-                            <x-text-input id="stock" name="stock" type="number" min="0" class="mt-1 block w-full" :value="old('stock', $product->stock)" required />
+                            <x-input-label for="stock" :value="__('Stock')" class="dark:text-[#9aa0a6]"/>
+                            <x-text-input id="stock" name="stock" type="number" min="0" class="mt-1 block w-full dark:text-[#e8eaed] dark:bg-[#2d2e31] dark:border-[#3c4043]" :value="old('stock', $product->stock)" required />
                             <x-input-error class="mt-2" :messages="$errors->get('stock')" />
                         </div>
 
                         <div>
-                            <x-input-label for="category_id" :value="__('Category')" />
+                            <x-input-label for="category_id" :value="__('Category')" class="dark:text-[#9aa0a6]"/>
                             <select id="category_id" name="category_id" class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" required>
                                 <option value="">Select a category</option>
                                 @foreach($categories as $category)

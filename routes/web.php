@@ -43,7 +43,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/sales/{sale}/invoice', [InvoiceController::class, 'generate'])->name('sales.invoice');
 
     // Users
-    Route::resource('users', UserController::class)->except(['show', 'edit', 'update']);
+    Route::resource('users', UserController::class)->except(['show']);
 
     // Settings
     Route::get('/settings', [SettingController::class, 'show'])->name('settings.show');
